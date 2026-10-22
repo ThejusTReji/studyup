@@ -1,0 +1,37 @@
+const mongoose = require('mongoose');
+
+const GameDataSchema = new mongoose.Schema({
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User', // This 'User' string should match the model name in your config.cjs (mongoose.model("User", LoginSchema))
+        required: true
+    },
+    username: {
+        type: String,
+        required: true // Store username for easier display/lookup
+    },
+    level: {
+        type: String, // <--- THIS MUST BE 'String'
+        required: true,
+        enum: ['level1', 'level2', 'level3', 'level4', 'level5', 'level6'] // Your frontend sends these string values
+    },
+    score: {
+        type: Number,
+        required: true,
+        default: 0
+    },
+    timeTaken: {
+        type: Number, // Store time in seconds (or milliseconds, be consistent)
+        required: true,
+        default: 0
+    },
+    timestamp: {
+        type: Date,
+        default: Date.now // Automatically records when the data was saved
+    }
+});
+
+// Optional: Add an index for faster queries on userId and level
+GameDataSchema.index({ userId: 1, level: 1 });
+
+module.exports = mongoose.model('GameData', GameDataSchema);

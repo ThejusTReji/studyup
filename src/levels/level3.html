@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Level 3: Operations and Expressions in C</title>
+    <link rel="stylesheet" href="css/stm.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Level 3: Operations and Expressions in C</h2>
+        <h3>What are Operators?</h3>
+        <p>Operators are symbols that perform operations on variables and values.</p>
+        <p>Example:</p>
+        <pre>
+            int sum = 10 + 5;  // Here, '+' is an operator
+        </pre>
+        <h3>Types of Operators in C</h3>
+        <h3>1. Arithmetic Operators</h3>
+        <p>These operators perform basic mathematical operations.</p>
+        <table>
+            <tr><th>Operator</th><th>Description</th><th>Example</th></tr>
+            <tr><td>+</td><td>Addition</td><td>a+b</td></tr>
+            <tr><td>-</td><td>Subtraction</td><td>a-b</td></tr>
+            <tr><td>*</td><td>Multiplication</td><td>a*b</td></tr>
+            <tr><td>/</td><td>Division</td><td>a/b</td></tr>
+            <tr><td>%</td><td>Modulus(Remainder)</td><td>a%b</td></tr>
+        </table>
+        <p>Example:</p>
+        <pre>
+                #include <stdio.h>
+
+                int main() {
+                    int a = 10, b = 3;
+                    printf("Addition: %d\n", a + b);
+                    printf("Subtraction: %d\n", a - b);
+                    printf("Multiplication: %d\n", a * b);
+                    printf("Division: %d\n", a / b);
+                    printf("Modulus: %d\n", a % b);
+                    return 0;
+                }
+                
+        </pre>
+        <p>Output:</p>
+        <pre>
+            Addition: 13  
+            Subtraction: 7  
+            Multiplication: 30  
+            Division: 3  
+            Modulus: 1  
+        </pre>
+        <p>Note: In integer division (/), the decimal part is ignored.</p>
+        <h3> 2. Relational (Comparison) Operators</h3>
+        <p>These operators compare values and return 1 (true) or 0 (false).</p>
+        <table>
+            <tr><th>Operator</th><th>Meaning</th><th>Example(a=5,b=10)</th><th>Result</th></tr>
+            <tr><td>==</td><td>Equal to</td><td>a == b</td><td></td>0 (false)</tr>
+            <tr><td>!=</td><td>Not Equal to</td><td>a != b</td><td>1 (true)</td></tr>
+            <tr><td>></td><td>Greater than</td><td>a > b</td><td>0 (false)</td></tr>
+            <tr><td><</td><td>Less than</td><td>a < b </td><td>1 (true)</td></tr>
+            <tr><td>>=</td><td>Greater than or equal to</td><td>a >= b</td><td>0 (false)</td></tr>
+            <tr><td><=</td><td>Less than or equal to</td><td>a <= b</td><td>1 (true)</td></tr>
+        </table>
+        <p>Example:</p>
+        <pre>
+            #include <.stdio.h>
+
+                int main() {
+                    int a = 5, b = 10;
+                    printf("%d\n", a > b);  // Output: 0 (false)
+                    printf("%d\n", a < b);  // Output: 1 (true)
+                    return 0;
+                }                           
+        </pre>
+        <h3>3. Logical Operators</h3>
+        <p>Used for combining multiple conditions.</p>
+        <table>
+            <tr><th>Operator</th><th>Meaning</th><th>Example(a=5,b=10)</th><th>Result</th></tr>
+            <tr><td>&&</td><td>AND</td><td>(a > 0 && b > 0)</td><td>1 (true)</td></tr>
+            <tr><td> ' </td><td> </td><td> ' </td><td>OR</td></tr>
+            <tr><td>!</td><td>NOT</td><td>!(a > b)</td><td>1 (true)</td></tr>
+        </table>
+        <p>Example:</p>
+        <pre> 
+            #include <stdio.h>
+
+                int main() {
+                    int a = 5, b = 10;
+                    printf("%d\n", (a > 0 && b > 0)); // Output: 1 (true)
+                    printf("%d\n", (a < 0 || b > 0)); // Output: 1 (true)
+                    printf("%d\n", !(a > b)); // Output: 1 (true)
+                    return 0;
+                }
+                          
+        </pre>  
+        <h3>4. Assignment Operators</h3>
+        <p>Used to assign values to variables.</p>
+        <table>
+            <tr><th>Operator</th><th>Example(a=5,b=10)</th><th>Result</th></tr>
+            <tr><td>=</td><td>a = b</td><td>Assign b to a</td></tr>
+            <tr><td>+=</td><td>a += 5</td><td>a = a + 5</td></tr>
+            <tr><td>-=</td><td>a -= 2</td><td>a = a - 2</td></tr>
+            <tr><td>*=</td><td>a *= 3</td><td>a = a * 3</td></tr>
+            <tr><td>/=</td><td>a /= 4</td><td>a = a / 4</td></tr>
+            <tr><td>%=</td><td>a %= 2</td><td>a = a % 2</td></tr>
+        </table>
+        <p>Example:</p>
+        <pre>
+            #include <stdio.h>
+
+                int main() {
+                    int x = 10;
+                    x += 5;  // x = x + 5
+                    printf("%d", x);  // Output: 15
+                    return 0;
+                }                          
+            </pre>
+        <h3>5. Increment and Decrement Operators</h3>
+        <p>These operators increase or decrease a value by 1.</p>
+        <table>
+            <tr><th>Operator</th><th>Meaning</th><th>Example</th></tr>
+            <tr><td>++</td><td>Increment by 1</td><td>a++ or ++a</td></tr>
+            <tr><td>--</td><td>Decrement by 1</td><td>a-- or --a</td></tr>
+        </table>
+        <p>Example:</p>
+        <pre>
+            int x = 5;
+            printf("%d\n", x++);  // Output: 5 (Post-increment)
+            printf("%d\n", ++x);  // Output: 7 (Pre-increment)
+            </pre>
+        <h3>6. Bitwise Operators</h3>
+        <p>Used for bit-level operations.</p>
+        <table>
+            <tr><th>Operator</th><th>Meaning</th><th>Example</th></tr>
+            <tr><td>&</td><td>AND</td><td>a & b</td></tr>
+            <tr><td>'</td><td>'</td><td>OR</td></tr>
+            <tr><td>^</td><td>XOR</td><td>a ^ b</td></tr>
+            <tr><td><<</td><td>Left Shift</td><td>a << 1</td></tr>
+            <tr><td>>></td><td>Right Shift</td><td>a >> 1</td></tr>
+        </table>
+        <p>Example:</p>
+        <pre>
+            #include <stdio.h>
+
+                int main() {
+                    int a = 5, b = 3;
+                    printf("Bitwise AND: %d\n", a & b);
+                    return 0;
+                }
+                
+        </pre>
+        <h3>7. Order of Operations (Operator Precedence)</h3>
+        <p>C follows BODMAS rules.</p>
+        <table>
+        <tr><th>Precedence</th><th>Operator</th></tr>
+            <tr><td>1st (Highest)</td><td>(), [], -></td></tr>
+            <tr><td>2nd</td><td>++, --, !, ~</td></tr>
+            <tr><td>3rd</td><td>*, /, %</td></tr>
+            <tr><td>4th</td><td>+, -</td></tr>
+            <tr><td>5th</td><td><<, >></td></tr>
+            <tr><td>6th</td><td><, <=, >, >=</td></tr>
+            <tr><td>7th</td><td>==, !=</td></tr>
+            <tr><td>8th</td><td>&</td></tr>
+            <tr><td>9th</td><td>^</td></tr>
+            <tr><td>10th</td><td>`</td></tr>
+            <tr><td>11th</td><td>&&</td></tr>
+            <tr><td>12th</td><td>`</td></tr>
+            <tr><td>13th (Lowest)</td><td>=, +=, -=, *=</td></tr>
+        </table>
+        <h3>Expressions in C</h3>
+        <p>Expressions combine variables, values, and operators.</p>
+        <p>Examples of Expressions</p>
+        <pre>
+            int result = (5 + 2) * 3;  // Result: 21
+            int x = 10, y = 5;
+            int sum = x + y;           // Sum: 15
+            </pre>
+               <!-- Button added at the end -->
+<div style="text-align: center; margin-top: 20px;">
+    <button onclick="nextLevel()">Next Level</button>
+</div>
+
+<script>
+    function nextLevel() {
+        // Redirect to the next level page
+        window.location.href = "pro.html";
+    }
+</script>
+</body>
+</html>

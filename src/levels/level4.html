@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Level 4: Conditional Statements in C</title>
+    <link rel="stylesheet" href="css/stm.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Level 4: Conditional Statements in C</h2>
+        <h3>What are Conditional Statements?</h3>
+        <p>Conditional statements allow a program to make decisions based on conditions.</p>
+        <p>Example:</p>
+        <pre>
+            if (age >= 18) {
+                printf("You can vote.");
+            } else {
+                printf("You cannot vote.");
+            }            
+        </pre>
+        <h3>Types of Conditional Statements in C</h3>
+        <p>C provides several conditional statements:
+            <ul>
+                <li>if statement</li>
+                <li>if-else statement</li>
+                <li>if-else if-else statement</li>
+                <li>Nested if statement</li>
+                <li>switch statement</li>
+                <li>Ternary (? :) operator</li>
+            </ul>
+        </p>
+        <h3>1. The if Statement</h3>
+        <p>The if statement executes a block of code only if the condition is true.</p>
+        <p>Syntax</p>
+        <pre>
+            if (condition) {
+                // Code executes if condition is true
+            }            
+        </pre>
+        <p>Example:</p>
+        <pre>
+            #include <.stdio.h>
+
+                int main() {
+                    int num = 10;
+                    if (num > 0) {
+                        printf("Number is positive.\n");
+                    }
+                    return 0;
+                }
+                
+        </pre>
+        <p>Output:</p>
+        <pre>
+            Number is positive.
+        </pre>
+        <h3> 2. The if-else Statement</h3>
+        <p>The if-else statement provides an alternative block if the condition is false.</p>
+        <p>Syntax</p>
+        <pre>
+            if (condition) {
+                // Executes if condition is true
+            } else {
+                // Executes if condition is false
+            }            
+        </pre>
+        <p>Example:</p>
+        <pre>
+            #include <.stdio.h>
+
+                int main() {
+                    int num = -5;
+                    if (num >= 0) {
+                        printf("Number is positive.\n");
+                    } else {
+                        printf("Number is negative.\n");
+                    }
+                    return 0;
+                }
+                                          
+        </pre>
+        <h3>3.The if-else if-else Statement</h3>
+        <p>When there are multiple conditions, we use if-else if-else.</p>
+        <p>Syntax</p>
+        <pre>
+            if (condition1) {
+                // Executes if condition1 is true
+            } else if (condition2) {
+                // Executes if condition2 is true
+            } else {
+                // Executes if none of the conditions are true
+            }
+            
+        </pre>
+        <p>Example: Checking Grades</p>
+        <pre> 
+            #include <stdio.h>
+
+                int main() {
+                    int marks = 85;
+                    
+                    if (marks >= 90) {
+                        printf("Grade: A\n");
+                    } else if (marks >= 80) {
+                        printf("Grade: B\n");
+                    } else if (marks >= 70) {
+                        printf("Grade: C\n");
+                    } else {
+                        printf("Grade: F\n");
+                    }
+                
+                    return 0;
+                }                
+                          
+        </pre>  
+        <p>Output:</p>
+        <pre>
+            Grade: B
+        </pre>
+        <h3>4.Nested if Statement</h3>
+        <p>An if statement inside another if statement is called a nested if.</p>
+        <p>Syntax</p>
+        <pre>if (condition1) {
+            // Executes if condition1 is true
+        } if (condition2) {
+            // Executes if condition2 is true
+        } else {
+            // Executes if none of the conditions are true
+        }</pre>
+        <p>Example:</p>
+        <pre>
+            #include <.stdio.h>
+
+                int main() {
+                    int num = 5;
+                
+                    if (num > 0) {
+                        if (num % 2 == 0) {
+                            printf("Number is even.\n");
+                        } else {
+                            printf("Number is odd.\n");
+                        }
+                    }
+                
+                    return 0;
+                }                                      
+            </pre>
+            <p>Output</p>
+            <pre>
+                Number is odd.
+            </pre>
+        <h3>5. The switch Statement</h3>
+        <p>The switch statement is used when we have multiple choices.</p>
+        <p>Syntax</p>
+        <pre>
+            switch (expression) {
+                case value1:
+                    // Code for value1
+                    break;
+                case value2:
+                    // Code for value2
+                    break;
+                default:
+                    // Code if no cases match
+            }
+            
+        </pre>
+        <p>Example: Menu System</p>
+        <pre>
+            #include <stdio.h>
+
+                int main() {
+                    int choice;
+                    
+                    printf("Enter a number (1-3): ");
+                    scanf("%d", &choice);
+                    
+                    switch (choice) {
+                        case 1:
+                            printf("You selected 1.\n");
+                            break;
+                        case 2:
+                            printf("You selected 2.\n");
+                            break;
+                        case 3:
+                            printf("You selected 3.\n");
+                            break;
+                        default:
+                            printf("Invalid choice.\n");
+                    }
+                
+                    return 0;
+                }                
+            </pre>
+            <p>Input: 2</p>
+            <p>Output:</p>
+            <pre>
+                You selected 2.
+            </pre>
+            <p>Notes: ✅ The break statement stops execution after a case.
+                ✅ The default case executes when no case matches.</p>
+        <h3>6.The Ternary (? :) Operator</h3>
+        <p>The ternary operator is a shorthand for if-else.</p>
+        <p>Syntax</p>
+        <pre>
+            condition ? expression1 : expression2;
+        </pre>
+        <p>Example:</p>
+        <pre>
+            #include <stdio.h>
+
+                int main() {
+                    int num = 10;
+                    (num % 2 == 0) ? printf("Even\n") : printf("Odd\n");
+                    return 0;
+                }                
+        </pre>
+        <p>Output</p>
+        <pre>
+            Even
+        </pre>
+        <h3>Common Mistakes in Conditional Statements</h3>
+        <p>
+            <ul>
+                <li>🚫 Forgetting break in switch statements (causes fall-through).</li>
+                <li>🚫 Not using {} for multiple statements in if.</li>
+                <li>🚫 Using = instead of == in conditions (if (x = 5) instead of if (x == 5)).</li>
+            </ul>
+        </p>
+           <!-- Button added at the end -->
+<div style="text-align: center; margin-top: 20px;">
+    <button onclick="nextLevel()">Next Level</button>
+</div>
+
+<script>
+    function nextLevel() {
+        // Redirect to the next level page
+        window.location.href = "pro.html";
+    }
+</script>
+</body>
+</html>

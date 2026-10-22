@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web@2.1.1/dist/phosphor.js"></script>
+    <style>
+        /* Custom styles for background and font */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #1a202c, #2d3748); /* Darker, more sophisticated gradient */
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden; /* Prevent scrollbar from background effects */
+            position: relative; /* For absolute positioning of background elements */
+        }
+
+        /* Subtle background pattern/texture */
+        .background-pattern {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: radial-gradient(circle at 100% 150%, #2a3342 0%, transparent 50%),
+                                  radial-gradient(circle at 0% -50%, #2a3342 0%, transparent 50%);
+            opacity: 0.3;
+            z-index: -1;
+        }
+
+        /* Blob animations */
+        @keyframes blob {
+            0% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(30px, -50px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
+            100% { transform: translate(0, 0) scale(1); }
+        }
+
+        .animate-blob {
+            animation: blob 7s infinite cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        }
+
+        .animation-delay-2000 { animation-delay: 2s; }
+        .animation-delay-4000 { animation-delay: 4s; }
+
+        /* Modal specific styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7); /* Darker overlay */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            visibility: hidden;
+            opacity: 0;
+            transition: visibility 0s, opacity 0.4s ease-in-out;
+        }
+
+        .modal-overlay.show {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .modal-content {
+            background-color: #2d3748; /* Dark modal background */
+            color: #e2e8f0; /* Light text for modal */
+            padding: 2.5rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+            text-align: center;
+            max-width: 90%;
+            width: 450px;
+            transform: scale(0.9);
+            transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55); /* Springy animation */
+        }
+
+        .modal-overlay.show .modal-content {
+            transform: scale(1);
+        }
+
+        .modal-content h3 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #f687b3; /* Accent color for title (pink) */
+        }
+
+        .modal-content p {
+            font-size: 1.1rem;
+            color: #cbd5e0;
+            margin-bottom: 2rem;
+        }
+
+        .modal-content button {
+            padding: 0.8rem 2rem;
+            background-color: #f687b3; /* Button accent color (pink) */
+            color: #1a202c; /* Dark text for button */
+            border: none;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .modal-content button:hover {
+            background-color: #f26d9b;
+            transform: translateY(-2px);
+        }
+
+        /* Input focus animation */
+        input:focus {
+            box-shadow: 0 0 0 3px rgba(246, 135, 179, 0.5); /* Pink glow */
+        }
+
+        /* Keyframe for text animation */
+        @keyframes fadeInSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-fadeInSlideUp {
+            animation: fadeInSlideUp 0.8s ease-out forwards;
+        }
+
+        /* Keyframe for icon animation */
+        @keyframes bounceIn {
+            0% { transform: scale(0.5); opacity: 0; }
+            70% { transform: scale(1.1); opacity: 1; }
+            100% { transform: scale(1); }
+        }
+
+        .animate-bounceIn {
+            animation: bounceIn 0.6s ease-out forwards;
+        }
+
+        /* Validation criteria list styles */
+        .validation-list {
+            font-size: 0.9rem;
+            color: #cbd5e0;
+            margin-top: 0.6rem;
+            margin-bottom: 1.2rem;
+            list-style: none; /* Remove default bullet */
+            padding-left: 0;
+        }
+
+        .validation-list li {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .validation-list li:last-child {
+            margin-bottom: 0;
+        }
+
+        .validation-list .icon {
+            font-size: 1rem;
+            color: #a0aec0; /* Default gray for pending */
+        }
+
+        .validation-list .icon.valid {
+            color: #48bb78; /* Green for valid */
+        }
+
+        .validation-list .icon.invalid {
+            color: #f56565; /* Red for invalid */
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen">
+
+    <div class="background-pattern"></div>
+    <div class="absolute top-1/4 left-1/4 w-32 h-32 bg-yellow-500 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-blob animation-delay-4000"></div>
+    <div class="absolute bottom-1/4 right-1/4 w-48 h-48 bg-teal-500 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-blob"></div>
+    <div class="absolute -top-10 -left-10 w-40 h-40 bg-red-500 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-blob"></div>
+    <div class="absolute -bottom-10 -right-10 w-52 h-52 bg-orange-500 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-blob animation-delay-2000"></div>
+
+    <div class="relative bg-gray-800 bg-opacity-90 p-10 rounded-xl shadow-2xl w-full max-w-lg md:max-w-xl lg:max-w-2xl overflow-hidden
+                 transform hover:scale-[1.01] transition-transform duration-300 ease-in-out">
+
+        <div class="relative z-10 text-white">
+            <div class="text-center mb-8">
+                <i class="ph-fill ph-user-plus text-6xl text-pink-400 mb-4 animate-bounceIn"></i>
+                <h2 class="text-4xl font-extrabold text-pink-300 mb-2 animate-fadeInSlideUp" style="animation-delay: 0.2s;">Join Us!</h2>
+                <p class="text-gray-400 text-lg animate-fadeInSlideUp" style="animation-delay: 0.4s;">Create your account to get started.</p>
+            </div>
+
+            <form id="signupForm" class="space-y-6">
+                <div>
+                    <label for="username" class="block text-gray-300 text-sm font-medium mb-2">Username:</label>
+                    <div class="relative mb-6"> <i class="ph-fill ph-user text-gray-500 absolute left-3 top-1/2 -translate-y-1/2"></i>
+                        <input
+                            id="username"
+                            type="text"
+                            name="username"
+                            required
+                            class="w-full pl-10 pr-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400
+                                   focus:outline-none focus:ring-2 focus:ring-pink-400 transition duration-200"
+                            placeholder="Choose a username"
+                        >
+                    </div>
+                </div>
+
+                <div>
+                    <label for="password" class="block text-gray-300 text-sm font-medium mb-2">Password:</label>
+                    <div class="relative">
+                        <i class="ph-fill ph-key text-gray-500 absolute left-3 top-1/2 -translate-y-1/2"></i>
+                        <input
+                            id="password"
+                            type="password"
+                            name="password"
+                            required
+                            class="w-full pl-10 pr-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400
+                                   focus:outline-none focus:ring-2 focus:ring-pink-400 transition duration-200"
+                            placeholder="Create a password"
+                        >
+                    </div>
+                </div>
+
+                <ul class="validation-list" id="combinedCriteria">
+                    <p class="text-sm text-gray-400 mb-2 mt-4">Username must have:</p>
+                    <li><i class="ph-fill ph-x-circle icon invalid" id="usernameCapital"></i> Starts with Cap.</li>
+                    <li><i class="ph-fill ph-x-circle icon invalid" id="usernameLength"></i> 3-20 characters</li>
+
+                    <p class="text-sm text-gray-400 mb-2 mt-4">Password must have:</p>
+                    <li><i class="ph-fill ph-x-circle icon invalid" id="passwordLength"></i> Min. 6 characters</li>
+                    <li><i class="ph-fill ph-x-circle icon invalid" id="passwordUppercase"></i> 1+ uppercase</li>
+                    <li><i class="ph-fill ph-x-circle icon invalid" id="passwordLowercase"></i> 1+ lowercase</li>
+                    <li><i class="ph-fill ph-x-circle icon invalid" id="passwordNumber"></i> 1+ number</li>
+                    <li><i class="ph-fill ph-x-circle icon invalid" id="passwordSpecial"></i> 1+ special character</li>
+                </ul>
+
+                <button
+                    type="submit"
+                    class="w-full bg-pink-500 text-white py-3 rounded-lg font-semibold text-lg
+                           hover:bg-pink-600 transition duration-300 ease-in-out transform hover:-translate-y-1 shadow-lg
+                           focus:outline-none focus:ring-2 focus:ring-pink-400 focus:ring-offset-2 focus:ring-offset-gray-800"
+                >
+                    Sign Up
+                </button>
+            </form>
+
+            <p class="text-center text-gray-400 mt-8 text-md">Already have an account?
+                <a href="/" class="text-pink-400 font-semibold hover:underline transition duration-200">Login here</a>
+            </p>
+        </div>
+    </div>
+
+    <div id="messageModal" class="modal-overlay">
+        <div class="modal-content">
+            <h3 id="modalTitle"></h3>
+            <p id="modalMessage"></p>
+            <button id="modalCloseButton">OK</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const signupForm = document.getElementById('signupForm');
+            const messageModal = document.getElementById('messageModal');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalMessage = document.getElementById('modalMessage');
+            const modalCloseButton = document.getElementById('modalCloseButton');
+
+            // Username validation elements
+            const usernameInput = document.getElementById('username');
+            const usernameCapital = document.getElementById('usernameCapital');
+            const usernameLength = document.getElementById('usernameLength');
+
+            // Password validation elements
+            const passwordInput = document.getElementById('password');
+            const passwordLength = document.getElementById('passwordLength');
+            const passwordUppercase = document.getElementById('passwordUppercase');
+            const passwordLowercase = document.getElementById('passwordLowercase');
+            const passwordNumber = document.getElementById('passwordNumber');
+            const passwordSpecial = document.getElementById('passwordSpecial');
+
+            // Function to update validation icon (check/x and color)
+            function updateValidationIcon(element, isValid) {
+                if (isValid) {
+                    element.classList.remove('ph-x-circle', 'invalid');
+                    element.classList.add('ph-check-circle', 'valid');
+                } else {
+                    element.classList.remove('ph-check-circle', 'valid');
+                    element.classList.add('ph-x-circle', 'invalid');
+                }
+            }
+
+            // Function to validate username
+            function validateUsername() {
+                const username = usernameInput.value;
+
+                // Username: First letter capitalized
+                const isCapitalized = /^[A-Z]/.test(username);
+                updateValidationIcon(usernameCapital, isCapitalized);
+
+                // Username: 3-20 characters long
+                const isLengthValid = username.length >= 3 && username.length <= 20;
+                updateValidationIcon(usernameLength, isLengthValid);
+
+                return isCapitalized && isLengthValid;
+            }
+
+            // Function to validate password
+            function validatePassword() {
+                const password = passwordInput.value;
+
+                // Password: At least 6 characters
+                const isLengthValid = password.length >= 6;
+                updateValidationIcon(passwordLength, isLengthValid);
+
+                // Password: At least one uppercase letter
+                const hasUppercase = /[A-Z]/.test(password);
+                updateValidationIcon(passwordUppercase, hasUppercase);
+
+                // Password: At least one lowercase letter
+                const hasLowercase = /[a-z]/.test(password);
+                updateValidationIcon(passwordLowercase, hasLowercase);
+
+                // Password: At least one number
+                const hasNumber = /[0-9]/.test(password);
+                updateValidationIcon(passwordNumber, hasNumber);
+
+                // Password: At least one special character
+                const hasSpecial = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/.test(password);
+                updateValidationIcon(passwordSpecial, hasSpecial);
+
+                return isLengthValid && hasUppercase && hasLowercase && hasNumber && hasSpecial;
+            }
+
+            // Add event listeners for real-time validation on input
+            if (usernameInput) {
+                usernameInput.addEventListener('input', validateUsername);
+            }
+            if (passwordInput) {
+                passwordInput.addEventListener('input', validatePassword);
+            }
+
+            // Initial validation check on load to show requirement states
+            validateUsername();
+            validatePassword();
+
+            // Function to show the custom modal
+            function showModal(title, message) {
+                modalTitle.textContent = title;
+                modalMessage.textContent = message;
+                messageModal.classList.add('show');
+            }
+
+            // Function to hide the custom modal
+            function hideModal() {
+                messageModal.classList.remove('show');
+            }
+
+            // Event listener for the modal close button
+            if (modalCloseButton) {
+                modalCloseButton.addEventListener('click', hideModal);
+            }
+
+            // Event listener for form submission
+            if (signupForm) {
+                signupForm.addEventListener('submit', async (event) => {
+                    event.preventDefault(); // Prevent default form submission
+
+                    const isUsernameValid = validateUsername();
+                    const isPasswordValid = validatePassword();
+
+                    if (!isUsernameValid) {
+                        showModal('Username Error', 'Please ensure your username meets all criteria.');
+                        return;
+                    }
+                    if (!isPasswordValid) {
+                        showModal('Password Error', 'Please ensure your password meets all criteria.');
+                        return;
+                    }
+
+                    const username = usernameInput.value;
+                    const password = passwordInput.value;
+
+                    try {
+                        // THIS IS THE ACTUAL FETCH REQUEST TO YOUR BACKEND
+                        // IMPORTANT: Replace '/signup' with the actual URL of your backend signup API endpoint
+                        const response = await fetch('/signup', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({ username, password }),
+                        });
+
+                        const data = await response.json(); // Parse the JSON response from your backend
+
+                        // Check both HTTP status (response.ok) and your backend's success flag (data.success)
+                        if (response.ok && data.success) {
+                            showModal('Success!', data.message || 'Sign up successful! Please log in.');
+                            // Redirect to login page after a short delay
+                            setTimeout(() => {
+                                window.location.href = '/'; // Redirect to your login page
+                            }, 2000); // Increased delay for better user experience with the modal
+                        } else {
+                            // If sign up failed (e.g., username already exists, server-side validation error)
+                            showModal('Sign Up Failed', data.message || 'Account creation failed. Please try again.');
+                        }
+                    } catch (error) {
+                        console.error('Sign up error:', error);
+                        // Display a generic error message for network issues or unhandled exceptions
+                        showModal('Error', 'An unexpected error occurred during sign up. Please check your internet connection and try again.');
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

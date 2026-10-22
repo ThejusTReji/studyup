@@ -1,0 +1,263 @@
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+
+// Scene Setup
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0xa0a0a0);
+scene.fog = new THREE.Fog(0xa0a0a0, 10, 500);
+
+// Renderer
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.shadowMap.enabled = true;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+document.body.appendChild(renderer.domElement);
+
+// Camera
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+camera.position.set(0, 5, 10);
+
+// Lighting
+const hemiLight = new THREE.HemisphereLight(0xffffff, 0x8d8d8d, 1.5);
+scene.add(hemiLight);
+
+const dirLight = new THREE.DirectionalLight(0xffffff, 3);
+dirLight.position.set(10, 20, 10);
+dirLight.castShadow = true;
+dirLight.shadow.mapSize.width = 2048;
+dirLight.shadow.mapSize.height = 2048;
+scene.add(dirLight);
+
+// Load Environment
+const loader = new GLTFLoader();
+let environment;
+loader.load('../assets/source/Project.glb', (gltf) => {
+    environment = gltf.scene;
+    environment.scale.set(1, 1, 1);
+    environment.traverse((child) => {
+        if (child.isMesh) {
+            child.receiveShadow = true;
+            child.castShadow = true;
+        }
+    });
+    scene.add(environment);
+}, undefined, console.error);
+
+// Load Character Model
+let character, mixer, animations = {};
+let velocity = new THREE.Vector3();
+let acceleration = 0.02;
+let deceleration = 0.03;
+let maxSpeed = 0.2;
+let currentAction = 'idle';
+
+loader.load('../assets/Xbot.glb', (gltf) => {
+    character = gltf.scene;
+    character.scale.set(1, 1, 1);
+    character.position.set(0, 1, 0);
+
+    character.traverse((child) => {
+        if (child.isMesh) {
+            child.castShadow = true;
+            child.receiveShadow = true;
+        }
+    });
+
+    scene.add(character);
+
+    // Setup animations
+    mixer = new THREE.AnimationMixer(character);
+    gltf.animations.forEach((clip) => {
+        animations[clip.name] = mixer.clipAction(clip);
+    });
+
+    activateAnimation('idle');
+}, undefined, console.error);
+
+// Animation blending function
+function activateAnimation(name) {
+    if (currentAction === name) return;
+    const action = animations[name];
+    if (!action) return;
+
+    const previousAction = animations[currentAction];
+    if (previousAction) previousAction.fadeOut(0.3);
+
+    action.reset().fadeIn(0.3).play();
+    currentAction = name;
+}
+
+// Free Fire Style Camera Movement
+let isDragging = false;
+let previousMouseX = 0;
+
+window.addEventListener('mousedown', (event) => {
+    isDragging = true;
+    previousMouseX = event.clientX;
+});
+
+window.addEventListener('mouseup', () => {
+    isDragging = false;
+});
+
+window.addEventListener('mousemove', (event) => {
+    if (isDragging) {
+        let deltaX = event.clientX - previousMouseX;
+        previousMouseX = event.clientX;
+        let rotationSpeed = 0.005;
+        camera.rotation.y -= deltaX * rotationSpeed;
+    }
+});
+
+// Smooth Camera Follow
+const cameraOffset = new THREE.Vector3(0, 4, -6);
+function updateCamera() {
+    if (!character) return;
+    const offset = cameraOffset.clone().applyAxisAngle(new THREE.Vector3(0, 1, 0), character.rotation.y);
+    const targetPosition = character.position.clone().add(offset);
+    camera.position.lerp(targetPosition, 0.1);
+    camera.lookAt(character.position);
+}
+
+// Character Movement with Rotation
+const keys = { ArrowUp: false, ArrowDown: false, ArrowLeft: false, ArrowRight: false };
+window.addEventListener('keydown', (e) => { if (keys[e.key] !== undefined) keys[e.key] = true; });
+window.addEventListener('keyup', (e) => { if (keys[e.key] !== undefined) keys[e.key] = false; });
+
+function updateMovement() {
+    if (!character) return;
+
+    let moving = false;
+    let direction = new THREE.Vector3();
+
+    if (keys.ArrowUp) {
+        direction.z -= 1;
+        moving = true;
+    }
+    if (keys.ArrowDown) {
+        direction.z += 1;
+        moving = true;
+    }
+    if (keys.ArrowLeft) {
+        direction.x -= 1;
+        moving = true;
+    }
+    if (keys.ArrowRight) {
+        direction.x += 1;
+        moving = true;
+    }
+
+    if (moving) {
+        direction.normalize().applyAxisAngle(new THREE.Vector3(0, 1, 0), camera.rotation.y);
+        velocity.addScaledVector(direction, acceleration);
+    } else {
+        velocity.multiplyScalar(1 - deceleration);
+        if (velocity.length() < 0.01) velocity.set(0, 0, 0);
+    }
+
+    velocity.clampLength(0, maxSpeed);
+    character.position.add(velocity);
+
+    if (moving) {
+        const targetRotation = Math.atan2(velocity.x, velocity.z);
+        character.rotation.y = THREE.MathUtils.lerp(character.rotation.y, targetRotation, 0.1);
+    }
+
+    if (moving && currentAction !== 'run') {
+        activateAnimation('run');
+    } else if (!moving && currentAction !== 'idle') {
+        activateAnimation('idle');
+    }
+}
+
+// Mini-Map Setup
+const miniMapSize = 200;
+const miniMapCamera = new THREE.OrthographicCamera(-10, 10, 10, -10, 0.1, 1000);
+miniMapCamera.position.set(0, 20, 0);
+miniMapCamera.lookAt(0, 0, 0);
+
+const miniMapRenderer = new THREE.WebGLRenderer({ alpha: true });
+miniMapRenderer.setSize(miniMapSize, miniMapSize);
+miniMapRenderer.domElement.style.position = 'absolute';
+miniMapRenderer.domElement.style.top = '10px';
+miniMapRenderer.domElement.style.left = '10px';
+miniMapRenderer.domElement.style.border = '3px solid white';
+miniMapRenderer.domElement.style.borderRadius = '50%';
+document.body.appendChild(miniMapRenderer.domElement);
+
+function updateMiniMap() {
+    if (!character) return;
+    miniMapCamera.position.set(character.position.x, 20, character.position.z);
+    miniMapCamera.lookAt(character.position.x, 0, character.position.z);
+    miniMapRenderer.render(scene, miniMapCamera);
+}
+
+const moveButtons = document.createElement('div');
+moveButtons.style.position = 'absolute';
+moveButtons.style.bottom = '20px';
+moveButtons.style.left = '50%';
+moveButtons.style.transform = 'translateX(-50%)';
+moveButtons.style.display = 'flex';
+moveButtons.style.gap = '10px';
+
+document.body.appendChild(moveButtons);
+
+const buttonStyle = 'width: 50px; height: 50px; font-size: 20px; background: rgba(0, 0, 0, 0.5); color: white; border: none; border-radius: 5px;';
+
+const upButton = document.createElement('button');
+upButton.innerText = '↑';
+upButton.style.cssText = buttonStyle;
+moveButtons.appendChild(upButton);
+
+const leftButton = document.createElement('button');
+leftButton.innerText = '←';
+leftButton.style.cssText = buttonStyle;
+moveButtons.appendChild(leftButton);
+
+const downButton = document.createElement('button');
+downButton.innerText = '↓';
+downButton.style.cssText = buttonStyle;
+moveButtons.appendChild(downButton);
+
+const rightButton = document.createElement('button');
+rightButton.innerText = '→';
+rightButton.style.cssText = buttonStyle;
+moveButtons.appendChild(rightButton);
+
+const keyMapping = {
+    'ArrowUp': upButton,
+    'ArrowDown': downButton,
+    'ArrowLeft': leftButton,
+    'ArrowRight': rightButton,
+};
+
+Object.entries(keyMapping).forEach(([key, button]) => {
+    button.addEventListener('mousedown', () => keys[key] = true);
+    button.addEventListener('mouseup', () => keys[key] = false);
+    button.addEventListener('mouseleave', () => keys[key] = false);
+    button.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        keys[key] = true;
+    }, { passive: false });
+    button.addEventListener('touchend', () => keys[key] = false);
+});
+
+
+// Animation Loop
+const clock = new THREE.Clock();
+function animate() {
+    requestAnimationFrame(animate);
+    updateMovement();
+    updateCamera();
+    updateMiniMap(); // ✅ Fixed mini-map update
+    if (mixer) mixer.update(clock.getDelta());
+    renderer.render(scene, camera);
+}
+animate();
+
+// Handle Window Resizing
+window.addEventListener('resize', () => {
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+});

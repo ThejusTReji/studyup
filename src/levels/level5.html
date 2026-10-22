@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Level 5: Control Statements in C</title>
+    <link rel="stylesheet" href="css/stm.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Level 5: Control Statements in C</h2>
+        <h3>1. What are Control Statements?</h3>
+        <p>Control statements in C control the flow of execution based on conditions or loops.</p>
+        <p>These statements help manage:
+            <ul>
+                <li>Looping (Iteration) → Execute code multiple times</li>
+                <li>Jumping (Branching) → Transfer control to another part of the program</li>
+            </ul>
+        </p>       
+        <h3>Types of Conditional Statements in C</h3>
+        <p>C has three categories of control statements:</p>
+        <p>A) Looping Statements
+            <ul>
+                <li>for loop</li>
+                <li>while loop</li>
+                <li>do-while loop</li>
+            </ul>
+        </p>
+        <p>B) Jumping Statements
+            <ul>
+                <li>break statement</li>
+                <li>continue statement</li>
+                <li>goto statement</li>
+                <li>return statement</li>
+            </ul>
+        </p>
+        <h3>Looping Statements</h3>
+        <p>Looping is used to repeat a block of code until a condition is met.</p>
+        <p>The for Loop</p>
+        <p>
+            <ul>
+                <li>Used when the number of iterations is known.</li>
+                <li>Consists of initialization, condition, and increment/decrement.</li>
+            </ul>
+        </p>
+        <p>Syntax</p>
+        <pre>
+            for (initialization; condition; update) {
+                // Code to execute
+            }                      
+        </pre>
+        <p>Example: Print numbers 1 to 5</p>
+        <pre>
+            #include <.stdio.h>
+
+                int main() {
+                    for (int i = 1; i <= 5; i++) {
+                        printf("%d ", i);
+                    }
+                    return 0;
+                }                
+                
+        </pre>
+        <p>Output:</p>
+        <pre>
+            1 2 3 4 5
+        </pre>
+        <h3> The while Loop</h3>
+        <p>
+            <ul>
+                <li>Used when the number of iterations is unknown.</li>
+                <li>Runs while the condition is true.</li>
+            </ul>
+        </p>
+        <p>Syntax</p>
+        <pre>
+            while (condition) {
+                // Code to execute
+            }                     
+        </pre>
+        <p>Example: Print numbers 1 to 5</p>
+        <pre>
+            #include <.stdio.h>
+
+                int main() {
+                    int i = 1;
+                    while (i <= 5) {
+                        printf("%d ", i);
+                        i++;
+                    }
+                    return 0;
+                }
+                                        
+        </pre>
+        <p>Output</p>
+        <pre>
+            1 2 3 4 5
+        </pre>
+        <h3>3.The do-while Loop</h3>
+        <p>Similar to while, but runs at least once, even if the condition is false.</p>
+        <p>Syntax</p>
+        <pre>
+            do {
+                // Code to execute
+            } while (condition);            
+            
+        </pre>
+        <p>Example: Print numbers 1 to 5</p>
+        <pre> 
+            #include <stdio.h>
+
+                int main() {
+                    int i = 1;
+                    do {
+                        printf("%d ", i);
+                        i++;
+                    } while (i <= 5);
+                    return 0;
+                }                
+        </pre>  
+        <p>Output:</p>
+        <pre>
+            1 2 3 4 5
+        </pre>
+        <h3>4. Jumping Statements</h3>
+        <p>Jumping statements alter the normal execution flow./p>
+        <p>The break Statement</p>
+        <p>Exits a loop or switch statement immediately.</p>
+        <p>Example: Stop loop at 3</p>
+        <pre>
+            #include <stdio.h>
+
+            int main() {
+                for (int i = 1; i <= 5; i++) {
+                    if (i == 3) {
+                        break;
+                    }
+                    printf("%d ", i);
+                }
+                return 0;
+            }
+            </pre>
+        <p>output</p>
+        <pre>
+            1 2                                   
+            </pre>
+    
+        <h3>The continue Statement</h3>
+        <p>Skips the rest of the current iteration and moves to the next iteration.</p>
+        <p>Example: Skip 3</p>
+        <pre>
+            #include <stdio.h>
+
+                int main() {
+                    for (int i = 1; i <= 5; i++) {
+                        if (i == 3) {
+                            continue;
+                        }
+                        printf("%d ", i);
+                    }
+                    return 0;
+                }                
+            
+        </pre>
+        <p>Output:</p>
+        <pre>
+            1 2 4 5            
+        </pre>
+        <h3>The goto Statement</h3>
+        <p>Jumps to a labeled statement. (⚠️ Not recommended for structured programming.)</p>
+        <p>Syntax</p>
+        <pre>
+            goto label;
+            // Some code
+            label:
+        </pre>
+        <p>Example:</p>
+        <pre>
+            #include <stdio.h>
+
+                int main() {
+                    int num = 2;
+                    
+                    if (num < 5) {
+                        goto skip;
+                    }
+                
+                    printf("This will be skipped.\n");
+                
+                skip:
+                    printf("Jumped here using goto.\n");
+                
+                    return 0;
+                }                           
+        </pre>
+        <p>Output</p>
+        <pre>
+            Jumped here using goto.
+        </pre>
+        <h3>The return Statement</h3>
+        <p>Exits a function and returns a value.</p>
+        <p>Example</p>
+        <pre>
+            #include <stdio.h>
+
+            int add(int a, int b) {
+                return a + b;
+            }
+            
+            int main() {
+                int result = add(5, 3);
+                printf("Sum: %d", result);
+                return 0;
+            }
+            </pre>
+            <p>Output</p>
+            <pre>
+                Sum: 8
+            </pre>
+            <h3>Common Mistakes in Loops and Jumping Statements</h3>
+            <p>
+                <ul>
+                    <li>🚫 Infinite Loops: Forgetting to update the loop variable.</li>
+                    <li>🚫 Incorrect use of break and continue: Misplacing them can lead to unexpected behavior.</li>
+                    <li>🚫 Using goto: Makes the code hard to understand.</li>
+                </ul>
+            </p>
+               <!-- Button added at the end -->
+<div style="text-align: center; margin-top: 20px;">
+    <button onclick="nextLevel()">Next Level</button>
+</div>
+
+<script>
+    function nextLevel() {
+        // Redirect to the next level page
+        window.location.href = "pro.html";
+    }
+</script>
+</body>
+</html>

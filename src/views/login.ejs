@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Dynamic</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web@2.1.1/dist/phosphor.js"></script>
+    <style>
+        /* Custom styles for background and font */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #1a202c, #2d3748); /* Darker, more sophisticated gradient */
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden; /* Prevent scrollbar from background effects */
+            position: relative; /* For absolute positioning of background elements */
+        }
+
+        /* Subtle background pattern/texture */
+        .background-pattern {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: radial-gradient(circle at 100% 150%, #2a3342 0%, transparent 50%),
+                                  radial-gradient(circle at 0% -50%, #2a3342 0%, transparent 50%);
+            opacity: 0.3;
+            z-index: -1;
+        }
+
+        /* Blob animations */
+        @keyframes blob {
+            0% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(30px, -50px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
+            100% { transform: translate(0, 0) scale(1); }
+        }
+
+        .animate-blob {
+            animation: blob 7s infinite cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        }
+
+        .animation-delay-2000 { animation-delay: 2s; }
+        .animation-delay-4000 { animation-delay: 4s; }
+
+        /* Modal specific styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7); /* Darker overlay */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            visibility: hidden;
+            opacity: 0;
+            transition: visibility 0s, opacity 0.4s ease-in-out;
+        }
+
+        .modal-overlay.show {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .modal-content {
+            background-color: #2d3748; /* Dark modal background */
+            color: #e2e8f0; /* Light text for modal */
+            padding: 2.5rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+            text-align: center;
+            max-width: 90%;
+            width: 450px;
+            transform: scale(0.9);
+            transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55); /* Springy animation */
+        }
+
+        .modal-overlay.show .modal-content {
+            transform: scale(1);
+        }
+
+        .modal-content h3 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #63b3ed; /* Accent color for title */
+        }
+
+        .modal-content p {
+            font-size: 1.1rem;
+            color: #cbd5e0;
+            margin-bottom: 2rem;
+        }
+
+        .modal-content button {
+            padding: 0.8rem 2rem;
+            background-color: #63b3ed; /* Button accent color */
+            color: #1a202c; /* Dark text for button */
+            border: none;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .modal-content button:hover {
+            background-color: #4299e1;
+            transform: translateY(-2px);
+        }
+
+        /* Input focus animation */
+        input:focus {
+            box-shadow: 0 0 0 3px rgba(99, 179, 237, 0.5); /* Blue glow */
+        }
+
+        /* Keyframe for text animation */
+        @keyframes fadeInSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-fadeInSlideUp {
+            animation: fadeInSlideUp 0.8s ease-out forwards;
+        }
+
+        /* Keyframe for icon animation */
+        @keyframes bounceIn {
+            0% { transform: scale(0.5); opacity: 0; }
+            70% { transform: scale(1.1); opacity: 1; }
+            100% { transform: scale(1); }
+        }
+
+        .animate-bounceIn {
+            animation: bounceIn 0.6s ease-out forwards;
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen">
+
+    <div class="background-pattern"></div>
+    <div class="absolute top-1/4 left-1/4 w-32 h-32 bg-green-500 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-blob animation-delay-4000"></div>
+    <div class="absolute bottom-1/4 right-1/4 w-48 h-48 bg-pink-500 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-blob"></div>
+    <div class="absolute -top-10 -left-10 w-40 h-40 bg-blue-500 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-blob"></div>
+    <div class="absolute -bottom-10 -right-10 w-52 h-52 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-blob animation-delay-2000"></div>
+
+    <div class="relative bg-gray-800 bg-opacity-90 p-10 rounded-xl shadow-2xl w-full max-w-lg md:max-w-xl lg:max-w-2xl overflow-hidden
+                transform hover:scale-[1.01] transition-transform duration-300 ease-in-out">
+
+        <div class="relative z-10 text-white">
+            <div class="text-center mb-8">
+                <i class="ph-fill ph-lock-key text-6xl text-blue-400 mb-4 animate-bounceIn"></i>
+                <h2 class="text-4xl font-extrabold text-blue-300 mb-2 animate-fadeInSlideUp" style="animation-delay: 0.2s;">Welcome Back!</h2>
+                <p class="text-gray-400 text-lg animate-fadeInSlideUp" style="animation-delay: 0.4s;">Sign in to access your account.</p>
+            </div>
+
+            <form id="loginForm" class="space-y-6">
+                <div>
+                    <label for="username" class="block text-gray-300 text-sm font-medium mb-2">Username:</label>
+                    <div class="relative">
+                        <i class="ph-fill ph-user text-gray-500 absolute left-3 top-1/2 -translate-y-1/2"></i>
+                        <input
+                            id="username"
+                            type="text"
+                            name="username"
+                            required
+                            class="w-full pl-10 pr-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400
+                                   focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-200"
+                            placeholder="Your username"
+                        >
+                    </div>
+                </div>
+
+                <div>
+                    <label for="password" class="block text-gray-300 text-sm font-medium mb-2">Password:</label>
+                    <div class="relative">
+                        <i class="ph-fill ph-key text-gray-500 absolute left-3 top-1/2 -translate-y-1/2"></i>
+                        <input
+                            id="password"
+                            type="password"
+                            name="password"
+                            required
+                            class="w-full pl-10 pr-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400
+                                   focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-200"
+                            placeholder="Your password"
+                        >
+                    </div>
+                </div>
+
+                <button
+                    type="submit"
+                    class="w-full bg-blue-500 text-white py-3 rounded-lg font-semibold text-lg
+                           hover:bg-blue-600 transition duration-300 ease-in-out transform hover:-translate-y-1 shadow-lg
+                           focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-gray-800"
+                >
+                    Login
+                </button>
+            </form>
+
+            <p class="text-center text-gray-400 mt-8 text-md">Don't have an account?
+                <a href="/signup" class="text-blue-400 font-semibold hover:underline transition duration-200">Sign up here</a>
+            </p>
+        </div>
+    </div>
+
+    <div id="messageModal" class="modal-overlay">
+        <div class="modal-content">
+            <h3 id="modalTitle"></h3>
+            <p id="modalMessage"></p>
+            <button id="modalCloseButton">OK</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const loginForm = document.getElementById('loginForm');
+            const messageModal = document.getElementById('messageModal');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalMessage = document.getElementById('modalMessage');
+            const modalCloseButton = document.getElementById('modalCloseButton');
+
+            // Function to show the custom modal
+            function showModal(title, message) {
+                modalTitle.textContent = title;
+                modalMessage.textContent = message;
+                messageModal.classList.add('show');
+            }
+
+            // Function to hide the custom modal
+            function hideModal() {
+                messageModal.classList.remove('show');
+            }
+
+            // Event listener for the modal close button
+            if (modalCloseButton) {
+                modalCloseButton.addEventListener('click', hideModal);
+            }
+
+            // Event listener for form submission
+            if (loginForm) {
+                loginForm.addEventListener('submit', async (event) => {
+                    event.preventDefault(); // Prevent default form submission
+
+                    const username = loginForm.username.value;
+                    const password = loginForm.password.value;
+
+                    // Basic validation
+                    if (!username || !password) {
+                        showModal('Input Error', 'Please enter both username and password.');
+                        return;
+                    }
+
+                    try {
+                        // **IMPORTANT: Replace '/login' with your actual backend login API endpoint**
+                        const response = await fetch('/login', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({ username, password }),
+                        });
+
+                        const data = await response.json(); // Parse the JSON response from your backend
+
+                        // Check both HTTP status (response.ok) and your backend's success flag (data.success)
+                        if (response.ok && data.success) {
+                            // Store user ID and username in localStorage
+                            // Ensure your backend returns 'userId' and 'username' on successful login
+                            localStorage.setItem('loggedInUserId', data.userId);
+                            localStorage.setItem('loggedInUsername', data.username);
+                            showModal('Success!', data.message || 'Login successful!');
+
+                            // Redirect after a short delay to allow the user to see the success message
+                            setTimeout(() => {
+                                window.location.href = '/lev1.html'; // Redirect to your Level 1 page
+                            }, 2000); // Increased delay for better user experience with the modal
+                        } else {
+                            // If login failed (e.g., wrong credentials, backend error)
+                            showModal('Login Failed', data.message || 'Invalid username or password. Please try again.');
+                        }
+                    } catch (error) {
+                        console.error('Login error:', error);
+                        // Display a generic error message for network issues or unhandled exceptions
+                        showModal('Error', 'An unexpected error occurred. Please check your internet connection and try again.');
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

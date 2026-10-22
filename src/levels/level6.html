@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Level 6: Functions in C</title>
+    <link rel="stylesheet" href="css/stm.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Level 6: Functions in C</h2>
+        <h3>What are Functions?</h3>
+        <p>A function is a block of code that performs a specific task. Functions help in code reusability, modularity, and readability.</p>
+        <p>In C, there are two types of functions:
+            <ul>
+                <li>Library Functions – Built-in functions like printf(), scanf(), sqrt(), etc.</li>
+                <li>User-defined Functions – Functions created by the programmer.</li>
+            </ul>
+        </p>       
+        <h3>Syntax of a Function</h3>
+        <p>C has three categories of control statements:</p>
+        <p>A function typically has:
+            <ul>
+                <li>A return type (what it returns)</li>                
+                <li>A name (identifier)</li>
+                <li>Parameters (optional inputs)</li>
+                <li>A body (statements)</li>
+                <li>A return statement (if applicable)</li>
+            </ul>
+        </p>
+        <pre>
+            returnType functionName(parameters) {
+                // Function body
+                return value; // Optional
+            }            
+        </pre>
+        <h3>Declaring and Calling a Function</h3>
+        <p>A function must be declared before use.</p>
+        <p>Example: Function to Add Two Numbers</p>
+        <pre>
+            #include <stdio.h>
+
+                // Function declaration (prototype)
+                int add(int, int);
+                
+                int main() {
+                    int result = add(5, 3); // Function call
+                    printf("Sum: %d", result);
+                    return 0;
+                }
+                
+                // Function definition
+                int add(int a, int b) {
+                    return a + b; // Return sum
+                }                
+        </pre>
+        <p>Output</p>
+        <pre>
+            Sum: 8
+        </pre>
+        <h3>Function Categories</h3>
+        <p>Functions can be classified based on:
+            <ul>
+                <li>Return type (returns a value or void)</li>
+                <li>Parameters (with or without arguments)</li>
+            </ul>
+        </p>
+        <table>
+            <tr><th>Function Type</th><th>Description</th><th>Example</th></tr>
+                <tr><td>No return, no arguments</td><td>Does not return anything or take input</td><td>void greet()</td></tr>
+                <tr><td>No return, with arguments</td><td>Takes input but does not return anything</td><td>void printSum(int, int)</td></tr>
+                <tr><td>With return, no arguments</td><td>Returns a value but takes no input</td><td>int getNumber()</td></tr>
+                <tr><td>With return, with arguments</td><td>Takes input and returns a value</td><td>int multiply(int, int)</td></tr>
+            </table>
+        <h3> Types of User-Defined Functions</h3>
+        <p>Functions with No Return and No Parameters</p>
+        <p>Performs an action but does not return a value.</p>
+        <p>Example: Print a Greeting</p>
+        <pre>
+            #include <stdio.h>
+
+                void greet() {
+                    printf("Hello, welcome to C programming!\n");
+                }
+                
+                int main() {
+                    greet(); // Function call
+                    return 0;
+                }                                   
+        </pre>
+        <p>Output</p>
+        <pre>
+            Hello, welcome to C programming!                   
+        </pre>
+        <p>Output</p>
+        <pre>
+            1 2 3 4 5
+        </pre>
+        <h3>Functions with No Return but with Parameters</h3>
+        <p>Takes input but does not return a value..</p>
+        <p>Example: Print Sum of Two Numbers</p>
+        <pre>
+            #include <stdio.h>
+
+                void printSum(int a, int b) {
+                    printf("Sum: %d\n", a + b);
+                }
+                
+                int main() {
+                    printSum(4, 7); // Function call
+                    return 0;
+                }                
+        </pre>
+        <p>Output</p>
+        <pre> 
+            Sum: 11    
+            </pre>      
+        <h3>Functions with Return but No Parameters</h3>
+        <p>Returns a value but takes no input.</p>
+        <p>Example: Return a Number</p>
+        <pre>
+            #include <stdio.h>
+
+                int getNumber() {
+                    return 10;
+                }
+                
+                int main() {
+                    int num = getNumber();
+                    printf("Number: %d", num);
+                    return 0;
+                }                
+            </pre>
+        <p>output</p>
+        <pre>
+            Number: 10                                  
+            </pre>
+    
+        <h3> Functions with Return and Parameters</h3>
+        <p>Takes input and returns a value.</p>
+        <p>Example: Multiply Two Numbers</p>
+        <pre>
+            #include <stdio.h>
+
+                int multiply(int a, int b) {
+                    return a * b;
+                }
+                
+                int main() {
+                    int result = multiply(6, 5);
+                    printf("Multiplication: %d", result);
+                    return 0;
+                }                               
+        </pre>
+        <p>Output:</p>
+        <pre>
+            Multiplication: 30        
+        </pre>
+        <h3> Function Prototypes (Declaration)</h3>
+        <p>
+            <ol>
+                <li>Function prototypes allow functions to be used before their actual definition.</li>
+                <li>Placed at the beginning of the program.</li>
+            </ol>
+        </p>
+        <p>Example</p>
+        <pre>
+            #include <stdio.h>
+
+                void display(); // Function prototype
+                
+                int main() {
+                    display(); // Function call
+                    return 0;
+                }
+                
+                void display() {
+                    printf("This is a function prototype example.");
+                }                
+        </pre>
+        <h3>Recursive Functions</h3>
+        <p>
+            <ol>
+                <li>A function that calls itself.</li>
+                <li>Used for problems like factorial, Fibonacci, etc.</li>
+            </ol>
+        </p>
+        <p>Example: Factorial using Recursion</p>
+        <pre>
+            #include <stdio.h>
+
+                int factorial(int n) {
+                    if (n == 0)
+                        return 1;
+                    return n * factorial(n - 1);
+                }
+                
+                int main() {
+                    printf("Factorial of 5: %d", factorial(5));
+                    return 0;
+                }                
+            </pre>
+            <p>Output</p>
+            <pre>
+                Factorial of 5: 120
+            </pre>
+            <h3>Passing Arguments to Functions</h3>
+            <p>Call by Value (Default in C)
+                <ul>
+                    <li>Passes a copy of the variable.</li>
+                    <li>Changes inside the function do not affect the original value.</li>
+                </ul>
+            </p>
+            <p>Example</p>
+            <pre>
+                #include <stdio.h>
+
+                    void changeValue(int x) {
+                        x = 100; // Changing x does not affect main()
+                    }
+                    
+                    int main() {
+                        int num = 50;
+                        changeValue(num);
+                        printf("Value: %d", num);
+                        return 0;
+                    }                    
+            </pre>
+            <p>Output</p>
+            <pre>
+                Value: 50
+            </pre>
+            <h3>Call by Reference (Using Pointers)</h3>
+            <p>
+                <ol>
+                    <li>Passes the memory address.</li>
+                    <li>Changes inside the function affect the original value.</li>
+                </ol>
+            </p>
+            <p>Example</p>
+            <pre>
+                #include <stdio.h>
+
+                    void changeValue(int *x) {
+                        *x = 100; // Changes the original value
+                    }
+                    
+                    int main() {
+                        int num = 50;
+                        changeValue(&num);
+                        printf("Value: %d", num);
+                        return 0;
+                    }                    
+            </pre>
+            <p>Output</p>
+            <pre>
+                Value: 100
+            </pre>
+            <h3>Storage Classes in Functions</h3>
+            <p>Storage classes define a variable’s scope, lifetime, and visibility.</p>
+            <table>
+                <tr><th>Storage Class</th><th>Lifetime</th><th>Scope</th><th>Default Value</th></tr>
+                <tr><td>auto (Default)</td><td>Function execution</td><td>Local</td><td>Garbage value</td></tr>
+                <tr><td>static</td><td>Entire program</td><td>Local</td><td>0</td></tr>
+                <tr><td>extern</td><td>Entire program</td><td>Global</td><td>0</td></tr>
+                <tr><td>register</td><td>Function execution</td><td>Local</td><td>Garbage value</td></tr>
+            </table>
+            <!-- Button added at the end -->
+<div style="text-align: center; margin-top: 20px;">
+    <button onclick="nextLevel()">Next Level</button>
+</div>
+
+<script>
+    function nextLevel() {
+        // Redirect to the next level page
+        window.location.href = "pro.html";
+    }
+</script>
+
+</body>
+</html>

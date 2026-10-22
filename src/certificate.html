@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>🏅 Achievement Badge</title>
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+    body {
+      display: flex; flex-direction: column; align-items: center;
+      justify-content: center; min-height: 100vh;
+      background: linear-gradient(to right, #f8c471, #6a11cb); color: #333;
+      padding: 20px;
+    }
+    .top-buttons {
+      position: absolute; top: 20px; right: 20px;
+    }
+    .top-buttons button {
+      background-color: #333; color: white; border: none;
+      padding: 8px 15px; margin-left: 10px; cursor: pointer;
+      border-radius: 5px; font-size: 14px;
+    }
+    .badge-container {
+      background: white; padding: 30px; border-radius: 15px;
+      box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.2);
+      max-width: 500px; width: 100%; text-align: center;
+      border: 5px solid #d4af37; position: relative;
+      margin-bottom: 30px;
+    }
+    .badge-title {
+      font-family: 'Great Vibes', cursive; font-size: 40px; color: #d4af37;
+    }
+    .badge-body {
+      font-size: 20px; margin: 20px 0; font-weight: 600; color: #333;
+    }
+    .badge-image {
+      width: 100px; margin: 15px auto; display: block;
+    }
+    .download-btn {
+      display: inline-block; padding: 12px 20px;
+      font-size: 16px; font-weight: 500;
+      background-color: #d4af37; color: white;
+      border: none; border-radius: 8px; cursor: pointer;
+      transition: 0.3s;
+    }
+    .download-btn:hover { background-color: #b99630; }
+    @media print {
+      .top-buttons, .download-btn { display: none; }
+      body { background: white; }
+      .badge-container { border: 5px solid black; box-shadow: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="top-buttons">
+    <button onclick="restartGame()">🔄 Restart</button>
+    <button onclick="goHome()">🏠 Home</button>
+  </div>
+
+  <div class="badge-container" id="badgeContainerToDownload">
+    <h1 class="badge-title">🏅 Achievement Badge</h1>
+    <p class="badge-body">This is awarded for successfully completing the challenge.</p>
+    <div id="badgeImageContainer"></div>
+    <p class="badge-body" id="badgeText">Congratulations!</p>
+    <p class="badge-body" id="totalScore">Total Score: Loading...</p>
+    <p class="badge-body" id="totalTime">Total Game Time: Loading...</p>
+    <p class="badge-body" id="levelsCompleted">Levels Completed: Loading...</p>
+    <p class="badge-body" id="totalAttempts">Total Attempts: Loading...</p>
+  </div>
+
+  <button class="download-btn" onclick="downloadBadge()">Download Badge</button>
+
+<script>
+  function formatTime(totalSeconds) {
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
+    return `${minutes}m ${seconds < 10 ? '0' : ''}${seconds}s`;
+  }
+
+  document.addEventListener('DOMContentLoaded', async () => {
+    const userId = localStorage.getItem('loggedInUserId');
+    const username = localStorage.getItem('loggedInUsername');
+
+    const totalScoreElement = document.getElementById("totalScore");
+    const totalTimeElement = document.getElementById("totalTime");
+    const levelsCompletedElement = document.getElementById("levelsCompleted");
+    const totalAttemptsElement = document.getElementById("totalAttempts");
+    const badgeTextElement = document.getElementById("badgeText");
+    const badgeImageContainer = document.getElementById("badgeImageContainer");
+
+    if (!userId || !username) {
+      totalScoreElement.innerText = `Total Score: N/A (Please log in)`;
+      totalTimeElement.innerText = `Total Game Time: N/A (Please log in)`;
+      levelsCompletedElement.innerText = `Levels Completed: N/A (Please log in)`;
+      totalAttemptsElement.innerText = `Total Attempts: N/A`;
+      badgeTextElement.innerText = `Please log in to see your achievements!`;
+      return;
+    }
+
+    try {
+      const response = await fetch(`http://localhost:3000/api/user-game-data/${userId}`);
+      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+      const gameData = await response.json();
+
+      if (!gameData || gameData.length === 0) {
+        throw new Error("No game data found for user.");
+      }
+
+      // Sort by latest time
+      gameData.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+      const latestTime = new Date(gameData[0].timestamp);
+      const sessionWindowMinutes = 15;
+
+      // 🟩 Filter recent session entries
+      const recentData = gameData.filter(entry => {
+        const diffInMin = (latestTime - new Date(entry.timestamp)) / (1000 * 60);
+        return diffInMin <= sessionWindowMinutes;
+      });
+
+      // ✅ RECENT session only
+      let totalScore = 0;
+      let totalSessionTime = 0;
+      const completedLevels = new Set();
+      recentData.forEach(entry => {
+        totalScore += entry.score;
+        totalSessionTime += entry.timeTaken;
+        completedLevels.add(entry.level);
+      });
+
+      // ✅ ALL time total game time
+      let totalGameTime = 0;
+      gameData.forEach(entry => {
+        totalGameTime += entry.timeTaken;
+      });
+
+      totalScoreElement.innerText = `Total Score: ${totalScore}`;
+      totalTimeElement.innerText = `Total Game Time: ${formatTime(totalGameTime)}`;
+      levelsCompletedElement.innerText = `Levels Completed: ${completedLevels.size}`;
+      totalAttemptsElement.innerText = `Total Attempts: ${gameData.length}`;
+
+      // 🎖️ Medal logic
+      let medalSrc = "", medalText = "";
+      if (totalScore >= 170 && totalScore <= 180) {
+        medalSrc = "https://i.postimg.cc/kV7B3N6n/istockphoto-1486938369-612x612.jpg"; // Gold
+        medalText = "You earned a Gold Medal!";
+      } else if (totalScore >= 150) {
+        medalSrc = "https://i.postimg.cc/NK65zC0J/j.jpg"; // Silver
+        medalText = "You earned a Silver Medal!";
+      } else if (totalScore >= 120) {
+        medalSrc = "https://i.postimg.cc/G4w4znbT/istockphoto-1486938369-612x612n.jpg"; // Bronze
+        medalText = "You earned a Bronze Medal!";
+      } else {
+        medalSrc = "https://i.postimg.cc/Y0LpVH4h/star.png"; // Star
+        medalText = "Keep practicing to earn a medal!";
+      }
+
+      const medalImage = document.createElement("img");
+      medalImage.src = medalSrc;
+      medalImage.alt = "Medal Image";
+      medalImage.classList.add("badge-image");
+      badgeImageContainer.innerHTML = "";
+      badgeImageContainer.appendChild(medalImage);
+
+      badgeTextElement.innerText = `Congratulations, ${username}! ${medalText}`;
+
+    } catch (err) {
+      console.error("Error fetching or processing game data:", err);
+      totalScoreElement.innerText = `Total Score: Error`;
+      totalTimeElement.innerText = `Total Time: Error`;
+      levelsCompletedElement.innerText = `Levels Completed: Error`;
+      totalAttemptsElement.innerText = `Total Attempts: Error`;
+      badgeTextElement.innerText = `Could not load your achievement.`;
+    }
+  });
+
+  async function downloadBadge() {
+    const badgeContainer = document.getElementById('badgeContainerToDownload');
+    const topButtons = document.querySelector(".top-buttons");
+    const downloadBtn = document.querySelector(".download-btn");
+    if (topButtons) topButtons.style.display = "none";
+    if (downloadBtn) downloadBtn.style.display = "none";
+
+    try {
+      const canvas = await html2canvas(badgeContainer, { scale: 2, useCORS: true, backgroundColor: null });
+      const image = canvas.toDataURL('image/png');
+      const link = document.createElement('a');
+      link.href = image;
+      link.download = 'achievement_badge.png';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (error) {
+      console.error('Error downloading badge:', error);
+    } finally {
+      if (topButtons) topButtons.style.display = "block";
+      if (downloadBtn) downloadBtn.style.display = "inline-block";
+    }
+  }
+
+  function restartGame() {
+    localStorage.removeItem('loggedInUserId');
+    localStorage.removeItem('loggedInUsername');
+    window.location.href = "pro.html";
+  }
+
+  function goHome() {
+    localStorage.removeItem('loggedInUserId');
+    localStorage.removeItem('loggedInUsername');
+    window.location.href = "";
+  }
+</script>
+</body>
+</html>

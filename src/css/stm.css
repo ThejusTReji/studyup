@@ -1,0 +1,67 @@
+body {
+font-family: Arial, sans-serif;
+margin: 0;
+padding: 0;
+background-color: #f4f4f4;
+}
+
+.container {
+max-width: 900px;
+margin: 30px auto;
+background: white;
+padding: 20px;
+border-radius: 8px;
+box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h2, h3 {
+text-align: center;
+color: #333;
+}
+
+pre {
+background: #272822;
+color: #f8f8f2;
+padding: 15px;
+border-radius: 5px;
+overflow-x: auto;
+}
+
+table {
+width: 100%;
+border-collapse: collapse;
+margin-top: 15px;
+background: #fff;
+}
+
+th, td {
+border: 1px solid #ddd;
+padding: 10px;
+text-align: left;
+}
+
+th {
+background-color: #333;
+color: white;
+}
+
+.quiz {
+margin-top: 20px;
+padding: 10px;
+background: #e3e3e3;
+border-radius: 5px;
+}
+
+ul, ol {
+padding-left: 20px;
+}
+
+p {
+line-height: 1.6;
+}
+
+code {
+background: #eee;
+padding: 2px 5px;
+border-radius: 3px;
+}

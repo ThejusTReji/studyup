@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Level 1: Introduction to C Programming</title>
+    <link rel="stylesheet" href="css/stm.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Level 1: Introduction to C Programming</h2>
+        <h3>Overview of C Programming</h3>
+        <p>C is a powerful, general-purpose programming language that is widely used for system programming, embedded systems, and application development. It is known for its efficiency, portability, and flexibility.</p>
+        
+        <h3>Structure of a C Program</h3>
+        <p>A basic C program consists of:
+            <ol>
+            1. Preprocessor Directives: #include (<stdio.h>)<br>
+            2. Main Function: int main() { ... }<br>
+            3. Statements and Functions<br>
+            4. Return Statement<br>
+            </ol>
+        </p>
+
+        <p>Example: Hello, World! Program</p>
+        <pre>
+            #include<stdio.h>  // Standard Input and Output Library
+
+                int main() {  
+                    printf("Hello, World!\n");  // Print a message
+                    return 0;  
+                }                
+        </pre>
+        <p>Explanation:
+        <ul>
+            #include <stdio.h >: Includes the standard I/O library.<br>
+            int main(): The entry point of the program.<br>
+            printf(): Prints output to the screen.<br>
+            return 0;: Indicates successful execution.<br>
+        </ul>    
+        </p>
+        <h3>Basic Input and Output in c</h3>
+        <h3.1>Using printf() for Output</h3.1>
+            <p>The printf() function is used to display output on the screen.</p>
+        <pre>
+            printf("format string", arguments);
+        </pre>
+        <p>Example:</p>
+        <pre> 
+            printf("Welcome to C Programming!\n");
+            printf("The value of x is %d\n", 10);
+        </pre>  
+<table>
+    <tr><th>Format Spacifier</th><th>Description</th><th>Example</th></tr>
+    <tr><td>%d/%i</td><td>Integer</td><td>printf("%d",5);</td></tr>
+    <tr><td>%f</td><td>Floating-Point</td><td>printf("%f", 3.14);</td></tr>
+    <tr><td>%c</td><td>Character</td><td>printf("%c", 'A');</td></tr>
+    <tr><td>%s</td><td>String</td><td>printf("%s", "Hello");</td></tr>
+</table>
+        <h3>Using scanf() for Input</h3>
+        <p>The scanf() function is used to take input from the user.</p>
+        <p>Example: Taking an integer input</p>
+        <pre>
+            int age;
+            printf("Enter your age: ");
+            scanf("%d", &age);  // Takes user input
+            printf("You entered: %d\n", age);
+        </pre>
+        <p>Key Points:
+        <ul>
+            <li>& (Address-of operator) is required for variables in scanf().</li>
+            <li>The format specifier in scanf() must match the variable type.</li>
+        </ul>
+            </p>
+        <p>Example: Taking multiple inputs</p>
+        <pre>
+            int num;
+            float price;
+            printf("Enter an integer and a float: ");
+            scanf("%d %f", &num, &price);
+            printf("You entered %d and %.2f\n", num, price);
+            </pre>
+        <h3>Comments in C</h3>
+        <p>Comments help explain code but are ignored by the compiler.</p>
+        <pre>
+            // This is a single-line comment
+            /* This is a multi-line comment */
+        </pre>
+        
+        <h3>Escape Sequences</h3>
+        <table>
+            <tr><th>Escape Sequence</th><th>Description</th></tr>
+            <tr><td>\n</td><td>Newline</td></tr>
+            <tr><td>\t</td><td>Tab space</td></tr>
+            <tr><td>\\</td><td>Backslash</td></tr>
+            <tr><td>\"</td><td>Double Quote</td></tr>
+        </table>
+        <p>Example:</p>
+        <pre>
+            printf("Hello\nWorld!\n");
+        </pre>
+        <p>Output:</p>
+        <pre>
+            Hello  
+            World!
+            </pre>
+        <h3>Example</h3>
+        <pre>#include <stdio.h>
+
+                int main() {
+                char name[20];
+                int age;
+            
+                printf("Enter your name: ");
+                scanf("%s", name);
+            
+                printf("Enter your age: ");
+                scanf("%d", &age);
+            
+                printf("Hello, %s! You are %d years old.\n", name, age);
+            
+                return 0;
+            }
+            </pre>
+             <!-- Button added at the end -->
+<div style="text-align: center; margin-top: 20px;">
+    <button onclick="nextLevel()">Next Level</button>
+</div>
+
+<script>
+    function nextLevel() {
+        // Redirect to the next level page
+        window.location.href = "pro.html";
+    }
+</script>
+</body>
+</html>

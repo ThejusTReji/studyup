@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Level 2: Data Types and Variables</title>
+    <link rel="stylesheet" href="css/stm.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Level 2: Data Types and Variables</h2>
+        <h3>What are Data Types?</h3>
+        <p>A data type in C determines the type of data a variable can store. It defines the memory size, format, and range of values.</p>
+        <table>
+            <tr><th>Data Type</th><th>Size</th><th>Description</th><th>Example</th></tr>
+            <tr><td>int</td><td>4 byte</td><td>Integer number</td><td>int num = 10;</td></tr>
+            <tr><td>float</td><td>4 byte</td><td>Floating-point numbers (decimal)</td><td>float pi = 3.14;</td></tr>
+            <tr><td>double</td><td>8 byte</td><td>Double-precision floating-point</td><td>double d = 3.141592;</td></tr>
+            <tr><td>char</td><td>1 byte</td><td>Single character</td><td>char ch = 'A';</td></tr>
+        </table>
+        <h3>Declaring Variables in C</h3>
+        <p>A variable is a container for storing data.</p>
+        <p>Syntax:</p>
+        <pre>
+            data_type variable_name = value;
+        </pre>
+        <p>Example:</p>
+        <pre>
+            int age = 25;
+            float temperature = 36.5;
+            char grade = 'A';      
+        </pre>
+        <p>Multiple Variable Declaration</p>
+        <pre>
+            int x, y, z;  // Declares multiple integer variables
+            float a = 5.6, b = 3.2;
+        </pre>
+        <h3> Rules for Naming Variables</h3>
+        <p>
+            <ul>
+                <li>Variable names must start with a letter or underscore (_).</li>
+                <li>They cannot contain spaces or special characters.</li>
+                <li>They cannot be a C keyword (e.g., int, return).</li>
+                <li>They are case-sensitive (Age and age are different).</li>
+            </ul>
+        </p>
+        <p>Valid Examples:</p>
+        <pre>
+            int age;
+            float price123;
+            char _grade;            
+        </pre>
+        <p>Invalid Examples:</p>
+        <pre> 
+            int 123number;  // Starts with a number (❌)
+            float price$;   // Special character not allowed (❌)
+            char return;    // Uses a keyword (❌)            
+        </pre>  
+
+        <h3>Constants in C</h3>
+        <p>A constant is a variable whose value cannot be changed.</p>
+        <p>Declaring Constants using const Keyword</p>
+        <pre>
+            const float PI = 3.1416;
+            const int DAYS_IN_WEEK = 7;
+        </pre>
+        <p>Example:</p>
+        <pre>
+            #include <stdio.h>
+
+                int main() {
+                    const float PI = 3.1416;
+                    printf("The value of PI is: %.4f\n", PI);
+                    return 0;
+                }                
+            </pre>
+        <p>Note: If you try to modify PI, the compiler will show an error.</p>
+        <h3>Basic Input and Output with Different Data Types</h3>
+        <p>We use scanf() to take input and printf() to display output.</p>
+        <p>Example: Taking Different Data Type Inputs</p>
+        <pre>
+            #include <stdio.h>
+
+                int main() {
+                    int num;
+                    float price;
+                    char grade;
+                
+                    printf("Enter an integer: ");
+                    scanf("%d", &num);
+                
+                    printf("Enter a float: ");
+                    scanf("%f", &price);
+                
+                    printf("Enter a character: ");
+                    scanf(" %c", &grade); // Space before %c to remove newline character
+                
+                    printf("Integer: %d, Float: %.2f, Character: %c\n", num, price, grade);
+                    return 0;
+                }
+        </pre>
+        <h3>Type Conversion in C</h3>
+        <p>1. Implicit Type Conversion (Automatic)</p>
+        <p>The compiler automatically converts smaller data types into larger ones.</p>
+        <pre>
+            int num = 10;
+            float result = num + 2.5;  // 'num' is converted to float automatically
+        </pre>
+        <p>2. Explicit Type Conversion (Casting)</p>
+        <p>We manually convert one type to another using type casting. </p>
+        <pre>
+            float num = 10.75;
+            int result = (int) num;  // Explicitly converting float to int
+            printf("%d", result);  // Output: 10
+            </pre>
+        <h3>Memory Sizes of Data Types</h3>
+        <p>You can use the sizeof operator to check the size of a data type.</p>
+        <p>Example:</p>
+        <pre>#include <stdio.h>
+
+            int main() {
+                printf("Size of int: %lu bytes\n", sizeof(int));
+                printf("Size of float: %lu bytes\n", sizeof(float));
+                printf("Size of char: %lu byte\n", sizeof(char));
+                printf("Size of double: %lu bytes\n", sizeof(double));
+                return 0;
+            }
+            
+        <p>Expected Output:</p>
+        <pre>
+            Size of int: 4 bytes
+            Size of float: 4 bytes
+            Size of char: 1 byte
+            Size of double: 8 bytes
+            </pre>
+   <!-- Button added at the end -->
+   <div style="text-align: center; margin-top: 20px;">
+    <button onclick="nextLevel()">Next Level</button>
+</div>
+
+<script>
+    function nextLevel() {
+        // Redirect to the next level page
+        window.location.href = "pro.html";
+    }
+</script>
+</body>
+</html>
